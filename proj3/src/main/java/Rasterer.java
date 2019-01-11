@@ -45,7 +45,7 @@ public class Rasterer {
         // System.out.println(params);
         Map<String, Object> results = new HashMap<>();
         System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
-                           + "your browser.");
+                + "your browser.");
         return results;
     }
 
