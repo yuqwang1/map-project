@@ -8,9 +8,19 @@ import java.util.Map;
  * not draw the output correctly.
  */
 public class Rasterer {
+    private Boolean query_success;
+    private static final double ROOT_LRLON = MapServer.ROOT_LRLON;
+    private static final double ROOT_ULLON = MapServer.ROOT_ULLON;
+    private static final double ROOT_ULLAT = MapServer.ROOT_ULLAT;
+    private static final double ROOT_LRLAT = MapServer.ROOT_LRLAT;
+    private static final double ROOT_WIDTH = ROOT_LRLON - ROOT_ULLON;
+    private static final double ROOT_HEIGHT = ROOT_ULLAT - ROOT_LRLAT;
+    private static final double ROOT_LONDPP = (ROOT_WIDTH)/MapServer.TILE_SIZE;
 
     public Rasterer() {
         // YOUR CODE HERE
+        query_success = true;
+
     }
 
     /**
@@ -42,11 +52,66 @@ public class Rasterer {
      *                    forget to set this to true on success! <br>
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-        // System.out.println(params);
         Map<String, Object> results = new HashMap<>();
+//        System.out.println(params);
+        double lonDPP = (params.get("lrlon") - params.get("ullon")/params.get("w"));
+        int depth = measureDepth(lonDPP);
+
+
         System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
                 + "your browser.");
         return results;
     }
+
+    private int measureDepth(double user_DPP) {
+        int depth = 0;
+        double current_DPP = ROOT_LONDPP;
+        while (current_DPP > user_DPP && depth < 7) {
+            current_DPP /= 2;
+            depth++;
+        }
+        return depth;
+    }
+
+    private int[] measureXRange(double user_ullon, double user_lrlon, double depth) {
+         int[] result = new int[2];
+         double movement = ROOT_WIDTH/Math.pow(2, depth);
+         double current_x = ROOT_ULLON;
+         int x1,x2;
+         for (x1 = 0; user_ullon > current_x; x1++){
+             current_x += movement;
+         }
+
+         for ( x2 = x1; user_lrlon < current_x; x2++ ) {
+             current_x += movement;
+         }
+
+         result[0] = x1;
+         result[1] = x2;
+         return result;
+
+
+    }
+
+    private int[] measureYRange(double user_ullat, double user_lrlat, double depth) {
+        int[] result = new int[2];
+        double movement = ROOT_HEIGHT/Math.pow(2, depth);
+        double current_y = ROOT_ULLAT;
+        int y1,y2;
+        for (y1 = 0; user_ullat < current_y; y1++){
+            current_y -= movement;
+        }
+
+        for ( y2 = y1; user_lrlat > current_y; y2++ ) {
+            current_y -= movement;
+        }
+
+        result[0] = y1;
+        result[1] = y2;
+        return result;
+    }
+
+
+
 
 }
