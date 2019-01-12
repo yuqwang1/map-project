@@ -72,9 +72,9 @@ public class Rasterer {
         double y_step = ROOT_HEIGHT/ Math.pow(2, depth);
         String[][] grid_render = getRenderDoc(depth, x_range, y_range);
         results.put("raster_ul_lon", ROOT_ULLON + x_range[0] * x_step);
-        results.put("raster_lr_lon", ROOT_ULLON + (x_range[1]) * x_step);
+        results.put("raster_lr_lon", ROOT_ULLON + (1.0 + x_range[1]) * x_step);
         results.put("raster_ul_lat", ROOT_ULLAT - y_range[0] * y_step);
-        results.put("raster_lr_lat", ROOT_ULLAT - (y_range[1]) * y_step);
+        results.put("raster_lr_lat", ROOT_ULLAT - (1.0 + y_range[1]) * y_step);
         results.put("render_grid", grid_render);
         results.put("depth", depth);
         results.put("query_success", query_success);
@@ -102,7 +102,7 @@ public class Rasterer {
     private int[] measureXRange(double user_ullon, double user_lrlon, double depth) {
          int[] result = new int[2];
          double movement = ROOT_WIDTH/Math.pow(2, depth);
-         double current_x = ROOT_ULLON;
+         double current_x = ROOT_ULLON + movement;
          int x1,x2;
          for (x1 = 0; user_ullon > current_x; x1++){
              current_x += movement;
@@ -110,6 +110,9 @@ public class Rasterer {
 
          for ( x2 = x1; user_lrlon < current_x; x2++ ) {
              current_x += movement;
+             if (current_x > ROOT_LRLON) {
+                 break;
+             }
          }
 
          result[0] = x1;
@@ -122,14 +125,17 @@ public class Rasterer {
     private int[] measureYRange(double user_ullat, double user_lrlat, double depth) {
         int[] result = new int[2];
         double movement = ROOT_HEIGHT/Math.pow(2, depth);
-        double current_y = ROOT_ULLAT;
+        double current_y = ROOT_ULLAT - movement;
         int y1,y2;
         for (y1 = 0; user_ullat < current_y; y1++){
             current_y -= movement;
         }
 
-        for ( y2 = y1; user_lrlat > current_y; y2++ ) {
+        for (y2 = y1; user_lrlat > current_y; y2++) {
             current_y -= movement;
+            if (current_y < ROOT_LRLAT) {
+                break;
+            }
         }
 
         result[0] = y1;
@@ -138,7 +144,7 @@ public class Rasterer {
     }
 
     private String[][] getRenderDoc(int depth, int[] x_range, int[] y_range ){
-        String[][] result = new String[y_range[1] - y_range[0]][x_range[1] - x_range[0]];
+        String[][] result = new String[y_range[1] - y_range[0] + 1][x_range[1] - x_range[0]+ 1];
         for (int j = 0; j + y_range[0] < y_range[1]; j++) {
             for (int i = 0; i + x_range[0] < x_range[1]; i++) {
                 String filename = "d" + Integer.toString(depth) + "_x" + Integer.toString(i + x_range[0]) + "_y" + Integer.toString(j + y_range[0])+ ".png";
