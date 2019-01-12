@@ -19,7 +19,6 @@ public class Rasterer {
 
 
     public Rasterer() {
-        // YOUR CODE HERE
         query_success = true;
 
     }
@@ -63,7 +62,8 @@ public class Rasterer {
         int depth = measureDepth(lonDPP);
         int[] x_range = measureXRange(ullon, lrlon, depth);
         int[] y_range = measureYRange(ullat, lrlat, depth);
-
+        System.out.println(y_range[0]);
+        System.out.println(y_range[1]);
         if (ullon > lrlon || lrlat > ullat || lrlon <= ROOT_ULLON|| ullon >= ROOT_LRLON || lrlat >= ROOT_ULLAT||ullat <= ROOT_LRLAT){
             query_success = false;
         }
@@ -78,13 +78,7 @@ public class Rasterer {
         results.put("render_grid", grid_render);
         results.put("depth", depth);
         results.put("query_success", query_success);
-
         return results;
-
-
-//        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
-//                + "your browser.");
-//        return results;
 
 
     }
@@ -108,7 +102,7 @@ public class Rasterer {
              current_x += movement;
          }
 
-         for ( x2 = x1; user_lrlon < current_x; x2++ ) {
+         for ( x2 = x1; user_lrlon > current_x; x2++ ) {
              current_x += movement;
              if (current_x > ROOT_LRLON) {
                  break;
@@ -131,7 +125,7 @@ public class Rasterer {
             current_y -= movement;
         }
 
-        for (y2 = y1; user_lrlat > current_y; y2++) {
+        for (y2 = y1; user_lrlat < current_y; y2++) {
             current_y -= movement;
             if (current_y < ROOT_LRLAT) {
                 break;
@@ -145,8 +139,8 @@ public class Rasterer {
 
     private String[][] getRenderDoc(int depth, int[] x_range, int[] y_range ){
         String[][] result = new String[y_range[1] - y_range[0] + 1][x_range[1] - x_range[0]+ 1];
-        for (int j = 0; j + y_range[0] < y_range[1]; j++) {
-            for (int i = 0; i + x_range[0] < x_range[1]; i++) {
+        for (int j = 0; j + y_range[0] <= y_range[1]; j++) {
+            for (int i = 0; i + x_range[0] <= x_range[1]; i++) {
                 String filename = "d" + Integer.toString(depth) + "_x" + Integer.toString(i + x_range[0]) + "_y" + Integer.toString(j + y_range[0])+ ".png";
                 result[j][i] = filename;
             }
