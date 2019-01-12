@@ -17,6 +17,7 @@ public class Rasterer {
     private static final double ROOT_HEIGHT = ROOT_ULLAT - ROOT_LRLAT;
     private static final double ROOT_LONDPP = (ROOT_WIDTH)/MapServer.TILE_SIZE;
 
+
     public Rasterer() {
         // YOUR CODE HERE
         query_success = true;
@@ -53,14 +54,39 @@ public class Rasterer {
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         Map<String, Object> results = new HashMap<>();
-//        System.out.println(params);
-        double lonDPP = (params.get("lrlon") - params.get("ullon")/params.get("w"));
+        double lrlon = params.get("lrlon");
+        double ullon = params.get("ullon");
+        double lrlat = params.get("lrlat");
+        double ullat = params.get("ullat");
+        double width = params.get("w");
+        double lonDPP = ((lrlon - ullon)/width);
         int depth = measureDepth(lonDPP);
+        int[] x_range = measureXRange(ullon, lrlon, depth);
+        int[] y_range = measureYRange(ullat, lrlat, depth);
 
+        if (ullon > lrlon || lrlat > ullat || lrlon <= ROOT_ULLON|| ullon >= ROOT_LRLON || lrlat >= ROOT_ULLAT||ullat <= ROOT_LRLAT){
+            query_success = false;
+        }
 
-        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
-                + "your browser.");
+        double x_step = ROOT_WIDTH / Math.pow(2, depth);
+        double y_step = ROOT_HEIGHT/ Math.pow(2, depth);
+        String[][] grid_render = getRenderDoc(depth, x_range, y_range);
+        results.put("raster_ul_lon", ROOT_ULLON + x_range[0] * x_step);
+        results.put("raster_lr_lon", ROOT_ULLON + (x_range[1]) * x_step);
+        results.put("raster_ul_lat", ROOT_ULLAT - y_range[0] * y_step);
+        results.put("raster_lr_lat", ROOT_ULLAT - (y_range[1]) * y_step);
+        results.put("render_grid", grid_render);
+        results.put("depth", depth);
+        results.put("query_success", query_success);
+
         return results;
+
+
+//        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
+//                + "your browser.");
+//        return results;
+
+
     }
 
     private int measureDepth(double user_DPP) {
@@ -111,7 +137,14 @@ public class Rasterer {
         return result;
     }
 
-
-
-
+    private String[][] getRenderDoc(int depth, int[] x_range, int[] y_range ){
+        String[][] result = new String[y_range[1] - y_range[0]][x_range[1] - x_range[0]];
+        for (int j = 0; j + y_range[0] < y_range[1]; j++) {
+            for (int i = 0; i + x_range[0] < x_range[1]; i++) {
+                String filename = "d" + Integer.toString(depth) + "_x" + Integer.toString(i + x_range[0]) + "_y" + Integer.toString(j + y_range[0])+ ".png";
+                result[j][i] = filename;
+            }
+        }
+        return result;
+    }
 }
