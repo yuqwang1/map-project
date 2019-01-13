@@ -156,4 +156,20 @@ public class GraphDB {
     double lat(long v) {
         return 0;
     }
+
+   private class Node {
+        double lon;
+        double lat;
+        ArrayList<Long> adjN;
+
+       Node(double lon, double lat){
+           this.lon = lon;
+           this.lat = lat;
+           this.adjN = new ArrayList<>();
+
+       }
+
+
+
+   }
 }
