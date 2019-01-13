@@ -168,8 +168,17 @@ public class GraphDB {
            this.adjN = new ArrayList<>();
 
        }
+    }
 
+    private class Location {
+        double lon;
+        double lat;
+        String locName = "";
 
-
-   }
+        Location(double lon, double lat, String LocName){
+            this.lon = lon;
+            this.lat = lat;
+            this.locName = locName;
+        }
+    }
 }
