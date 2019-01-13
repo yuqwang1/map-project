@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -26,6 +26,9 @@ public class GraphDB {
      * You do not need to modify this constructor, but you're welcome to do so.
      * @param dbPath Path to the XML file to be parsed.
      */
+    private final Map<Long, Spot> SPOTS = new HashMap<>();
+    private final Map<Long, Node> SPOTNODES = new HashMap<>();
+    private final Map<String, List<Long>> SPOTNAMES = new HashMap<>();
     public GraphDB(String dbPath) {
         try {
             File inputFile = new File(dbPath);
@@ -66,8 +69,10 @@ public class GraphDB {
      */
     Iterable<Long> vertices() {
         //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
+//        return new ArrayList<Long>();
+        return SPOTNODES.keySet();
     }
+
 
     /**
      * Returns ids of all vertices adjacent to v.
@@ -75,7 +80,10 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        return null;
+
+//        return null;
+        isVertex(v);
+        return SPOTNODES.get(v).adjN;
     }
 
     /**
@@ -157,6 +165,14 @@ public class GraphDB {
         return 0;
     }
 
+    private void isVertex(long v){
+       try {
+           SPOTNODES.containsKey(v);
+       } catch(Exception ex) {
+           System.out.println("The vertex is not on the graph");
+        }
+    }
+
    private class Node {
         double lon;
         double lat;
@@ -170,15 +186,15 @@ public class GraphDB {
        }
     }
 
-    private class Location {
+    private class Spot {
         double lon;
         double lat;
-        String locName = "";
+        String spotName = "";
 
-        Location(double lon, double lat, String LocName){
+        Spot(double lon, double lat, String spotName){
             this.lon = lon;
             this.lat = lat;
-            this.locName = locName;
+            this.spotName = spotName;
         }
     }
 }
