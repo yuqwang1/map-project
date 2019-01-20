@@ -26,8 +26,8 @@ public class GraphDB {
      * You do not need to modify this constructor, but you're welcome to do so.
      * @param dbPath Path to the XML file to be parsed.
      */
-    private final Map<Long, Spot> SPOTS = new HashMap<>();
-    private final Map<Long, Node> SPOTNODES = new HashMap<>();
+    private final Map<Long, Spot> Spots = new HashMap<>();
+    private final Map<Long, Node> SpotNodes = new HashMap<>();
     private final Map<String, List<Long>> SPOTNAMES = new HashMap<>();
     public GraphDB(String dbPath) {
         try {
@@ -70,7 +70,7 @@ public class GraphDB {
     Iterable<Long> vertices() {
         //YOUR CODE HERE, this currently returns only an empty list.
 //        return new ArrayList<Long>();
-        return SPOTNODES.keySet();
+        return SpotNodes.keySet();
     }
 
 
@@ -83,7 +83,7 @@ public class GraphDB {
 
 //        return null;
         isVertex(v);
-        return SPOTNODES.get(v).adjN;
+        return SpotNodes.get(v).adjN;
     }
 
     /**
@@ -144,6 +144,7 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
+
         return 0;
     }
 
@@ -153,7 +154,8 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        return 0;
+        isVertex(v);
+        return SpotNodes.get(v).lon;
     }
 
     /**
@@ -162,14 +164,55 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        return 0;
+        isVertex(v);
+        return SpotNodes.get(v).lat;
+    }
+
+    double spotLon(long v) {
+        isSpot(v);
+        return Spots.get(v).lon;
+    }
+
+    double spotLat(long v) {
+        isSpot(v);
+        return Spots.get(v).lat;
+    }
+
+    String getSpotName(long v) {
+        isSpot(v);
+        return Spots.get(v).spotName;
+    }
+
+    void addSpotNode(long id, double lon, double lat){
+        Node spotNode = new Node(lon,lat);
+        SpotNodes.put(id, spotNode);
+    }
+
+    void addSpot(long id, double lon, double lat, String spotName){
+        Spot S = new Spot(lon, lat, spotName);
+        Spots.put(id, S);
+    }
+
+    void addEdge(long v, long w){
+        isVertex(v);
+        isVertex(w);
+        SpotNodes.get(v).adjN.add(w);
+        SpotNodes.get(w).adjN.add(v);
     }
 
     private void isVertex(long v){
        try {
-           SPOTNODES.containsKey(v);
+           SpotNodes.containsKey(v);
        } catch(Exception ex) {
            System.out.println("The vertex is not on the graph");
+        }
+    }
+
+    private void isSpot(long v){
+        try {
+            Spots.containsKey(v);
+        } catch(Exception ex) {
+            System.out.println("The spot is not on the graph");
         }
     }
 

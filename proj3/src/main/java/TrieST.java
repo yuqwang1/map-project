@@ -23,7 +23,6 @@ import java.util.*;
  *  You should have received a copy of the GNU General Public License
  *  along with algs4.jar.  If not, see http://www.gnu.org/licenses.
  ******************************************************************************/
-/**
 
 public class TrieST<Value> {
     private static final int R = 256;        // extended ASCII
