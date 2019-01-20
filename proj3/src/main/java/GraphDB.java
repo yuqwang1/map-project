@@ -198,9 +198,8 @@ public class GraphDB {
 //        return Spots.get(v).spotName;
 //    }
 
-    void addSpotNode(long id, double lon, double lat){
-        Node spotNode = new Node(lon,lat);
-        SpotNodes.put(id, spotNode);
+    void addSpotNode(Node node){
+        SpotNodes.put(node.id, node);
     }
 
 //    void addSpot(long id, double lon, double lat, String spotName){
@@ -237,12 +236,14 @@ public class GraphDB {
 //        }
 //    }
 
-   private class Node {
+   static class Node {
         double lon;
         double lat;
         ArrayList<Long> adjN;
+        long id;
 
-       Node(double lon, double lat){
+       Node(long id, double lon, double lat){
+           this.id = id;
            this.lon = lon;
            this.lat = lat;
            this.adjN = new ArrayList<>();
