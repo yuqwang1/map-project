@@ -61,6 +61,13 @@ public class GraphDB {
      */
     private void clean() {
         // TODO: Your code here.
+        Iterator<Map.Entry<Long, Node>> nodes_iterator = SpotNodes.entrySet().iterator();
+        while(nodes_iterator.hasNext()){
+            Map.Entry<Long, Node> item = nodes_iterator.next();
+            if (item.getValue().adjN.isEmpty()){
+                nodes_iterator.remove();
+            }
+        }
     }
 
     /**
