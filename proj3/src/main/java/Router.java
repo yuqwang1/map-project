@@ -1,5 +1,6 @@
 import java.util.*;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 /**
  * This class provides a shortestPath method for finding routes between two points
  * on the map. Start by using Dijkstra's, and if your code isn't fast enough for your
@@ -22,16 +23,16 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-//        return null; // FIXME
-        Map<Long, Long> distant = new HashMap<>();
-        long stLoc = g.closest(stlon, stlat);
-        long destLoc = g.closest(destlon, destlat);
-        PriorityQueue<Long> fringe = new PriorityQueue<Long>(new Comparator<Long>(){
-            private int comparator(Long w, Long v){
-            double wPath = dest
-            }
-        }
-    });
+        return null; // FIXME
+//        Map<Long, Long> distant = new HashMap<>();
+//        long stLoc = g.closest(stlon, stlat);
+//        long destLoc = g.closest(destlon, destlat);
+//        PriorityQueue<Long> fringe = new PriorityQueue<Long>(new Comparator<Long>(){
+//            private int comparator(Long w, Long v){
+//            double wPath = dest
+//            }
+//        }
+    }
 
     /**
      * Create the list of directions corresponding to a route on the graph.
