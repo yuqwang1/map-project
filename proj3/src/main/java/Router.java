@@ -24,14 +24,17 @@ public class Router {
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
         return null; // FIXME
-//        Map<Long, Long> distant = new HashMap<>();
+//        Map<Long, Long> distance = new HashMap<>();
 //        long stLoc = g.closest(stlon, stlat);
 //        long destLoc = g.closest(destlon, destlat);
 //        PriorityQueue<Long> fringe = new PriorityQueue<Long>(new Comparator<Long>(){
-//            private int comparator(Long w, Long v){
-//            double wPath = dest
+//            public int compare(Long w, Long v){
+//            double wPath = distance.get(w) + g.distance(w, destLoc);
+//            double vPath = distance.get(v) + g.distance(v, destLoc);
+//
 //            }
 //        }
+//        return null;
     }
 
     /**
@@ -71,7 +74,7 @@ public class Router {
 
         /** Default name for an unknown way. */
         public static final String UNKNOWN_ROAD = "unknown road";
-        
+
         /** Static initializer. */
         static {
             DIRECTIONS[START] = "Start";
