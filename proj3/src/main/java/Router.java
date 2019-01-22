@@ -1,7 +1,4 @@
-import java.util.List;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.*;
 
 /**
  * This class provides a shortestPath method for finding routes between two points
@@ -25,8 +22,16 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
-    }
+//        return null; // FIXME
+        Map<Long, Long> distant = new HashMap<>();
+        long stLoc = g.closest(stlon, stlat);
+        long destLoc = g.closest(destlon, destlat);
+        PriorityQueue<Long> fringe = new PriorityQueue<Long>(new Comparator<Long>(){
+            private int comparator(Long w, Long v){
+            double wPath = dest
+            }
+        }
+    });
 
     /**
      * Create the list of directions corresponding to a route on the graph.
